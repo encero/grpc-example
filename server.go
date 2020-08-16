@@ -10,10 +10,11 @@ import (
 	"net"
 )
 
-var name = "0"
+var name = flag.String("number", "0", "")
+var useConsul = flag.Bool( "use-consul", false, "")
 
 func main() {
-	flag.StringVar(&name, "number", "0", "")
+
 	flag.Parse()
 
 	server := grpc.NewServer()
@@ -25,7 +26,10 @@ func main() {
 		panic(err)
 	}
 
-	registerToConsul()
+	if *useConsul {
+		registerToConsul()
+	}
+
 
 	fmt.Println("Listening on port 9000")
 	err = server.Serve(listen)

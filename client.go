@@ -5,14 +5,20 @@ import (
 	"fmt"
 	"github.com/encero/grpc-example/restriction_service/v1"
 	"google.golang.org/grpc"
+	"os"
 	"time"
 
 	_ "github.com/mbobakov/grpc-consul-resolver"
 )
 
 func main() {
+	connectionString := os.Getenv("GRPC_CONNECTION_STRING")
+	if connectionString == "" {
+		connectionString = "consul://consul-agent:8500/service?healthy=true"
+	}
+
 	conn, err := grpc.Dial(
-		"consul://consul-agent:8500/service?healthy=true",
+		connectionString,
 		grpc.WithInsecure(),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`))
 	if err != nil {

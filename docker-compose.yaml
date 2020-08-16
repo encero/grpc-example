@@ -41,7 +41,7 @@ services:
     volumes:
     - ./:/app
     working_dir: /app
-    command: go run server.go -number 1
+    command: go run server.go -number 1 -use-consul
     restart: always
     networks:
       - net
@@ -50,7 +50,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    command: go run server.go -number 2
+    command: go run server.go -number 2 -use-consul
     restart: always
     networks:
       - net
@@ -59,7 +59,7 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    command: go run server.go -number 3
+    command: go run server.go -number 3 -use-consul
     restart: always
     networks:
       - net

@@ -1,0 +1,24 @@
+version: "3"
+services:
+  server:
+    image: golang:1.14
+    volumes:
+    - ./:/app
+    working_dir: /app
+    command: go run server.go -number 1
+    restart: always
+    networks:
+      - net
+  client:
+    image: golang:1.14
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: go run client.go
+    restart: always
+    environment:
+      GRPC_CONNECTION_STRING: "server:9000"
+    networks:
+      - net
+networks:
+  net:
