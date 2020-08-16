@@ -1,0 +1,21 @@
+syntax = "proto3";
+option go_package = "github.com/encero/grpc-example/restriction_service";
+package restriction_service.v1;
+
+service RestrictionService {
+    rpc IsRestricted (IsRestrictedRequest) returns (IsRestrictedResponse) {}
+}
+
+message IsRestrictedRequest {
+    repeated Product products = 1;
+}
+
+message IsRestrictedResponse {
+    map<sint64, bool> is_restricted = 1;
+}
+
+message Product {
+    sint64 id = 1;
+    string brand = 2;
+    string category = 3;
+}

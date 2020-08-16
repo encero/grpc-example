@@ -1,0 +1,76 @@
+version: "3"
+services:
+  consul-server-A:
+    image: consul
+    networks:
+      - net
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command: agent -client 0.0.0.0 -server -bootstrap-expect 3 -ui
+    restart: always
+    ports:
+    - 8500:8500
+  consul-server-B:
+    image: consul
+    networks:
+      - net
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command: agent -client 0.0.0.0 -server -bootstrap-expect 3 -retry-join consul-server-A
+    restart: always
+  consul-server-C:
+    image: consul
+    networks:
+      - net
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command: agent -client 0.0.0.0 -server -bootstrap-expect 3 -retry-join consul-server-A
+    restart: always
+  consul-agent:
+    image: consul
+    networks:
+      - net
+    ports:
+      - 8600:8600
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command:
+      agent -retry-join consul-server-A -retry-join consul-server-B -retry-join consul-server-C -client 0.0.0.0
+  server-1:
+    image: golang:1.14
+    volumes:
+    - ./:/app
+    working_dir: /app
+    command: go run server.go -number 1
+    restart: always
+    networks:
+      - net
+  server-2:
+    image: golang:1.14
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: go run server.go -number 2
+    restart: always
+    networks:
+      - net
+  server-3:
+    image: golang:1.14
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: go run server.go -number 3
+    restart: always
+    networks:
+      - net
+  client:
+    image: golang:1.14
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: go run client.go
+    restart: always
+    networks:
+      - net
+networks:
+  net:
