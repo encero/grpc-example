@@ -17,7 +17,6 @@ grpc-generate:
 grpc-lint:
 	# lint protocol buffer files
 	docker run --rm --volume "$(shell pwd):/workspace" --workdir /workspace bufbuild/buf check lint
-	# load latest remote master
-	git fetch
+grpc-lint-bc:
 	# check breaking changes
-	docker run --rm --volume "$(shell pwd):/workspace" --workdir /workspace bufbuild/buf check breaking --against-input '.git#branch=origin/master'
+	docker run --rm --volume "$(shell pwd):/workspace" --workdir /workspace bufbuild/buf check breaking --against-input 'https://github.com/encero/grpc-example.git#branch=master'
